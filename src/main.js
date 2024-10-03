@@ -16,9 +16,6 @@ export const refs = {
   input: document.querySelector('.input-serch'), // поле ввода поиска
 };
 
-console.log(refs.input); // Исправляем ошибку здесь, должно быть `input`, а не `searchInput`
-console.log(refs.form); // Проверяем, что форма найдена
-
 // показать или скрыть лоадер
 function showLoader() {
   refs.loader.classList.add('loader');
@@ -29,28 +26,37 @@ function hideLoader() {
 
 // Показать или скрыть кнопку
 function showBtn() {
-  refs.btn.classList.add('buttonHiden');
+  refs.btn.classList.remove('buttonHiden');
 }
 function hideBtn() {
-  refs.btn.classList.remove('buttonHiden');
+  refs.btn.classList.add('buttonHiden');
 }
 
 // скрываем лоадер при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
   hideLoader();
 });
-
-// очистка страницы
-function clearPage() {
+// функция для очистки предыдущего запроса
+function clearPreviousSearch() {
+  search = ''; // сбрасываем значение переменной search
+  _page = 1; // сбрасываем номер страницы
   if (refs.userContainerUL) {
-    refs.userContainerUL.innerHTML = '';
+    refs.userContainerUL.innerHTML = ''; // очищаем контейнер с результатами
   }
+  refs.input.value = ''; // очищаем поле ввода
 }
+// // очистка страницы
+// function clearPage() {
+//   if (refs.userContainerUL) {
+//     refs.userContainerUL.innerHTML = '';
+//   }
+// }
 
 // обработка отправки формы
 async function handleFormSubmit(event) {
   event.preventDefault(); // предотвращаем перезагрузку страницы
-
+  clearPreviousSearch();
+  console.log(refs.userContainerUL);
   search = refs.input.value; // получаем значение из поля поиска
 
   console.log(search);
@@ -69,8 +75,8 @@ async function handleFormSubmit(event) {
       messageLineHeight: 24,
       position: 'topRight',
     });
-    clearPage(); // очищаем контейнер для новых
-    showBtn();
+
+    hideBtn();
     console.log('Запрос пустой');
     return;
   }
@@ -81,7 +87,7 @@ async function handleFormSubmit(event) {
     await fetchGallery(search); // выполняем запрос по ключевому слову
 
     if (arrData.length === 0) {
-      showBtn();
+      hideBtn;
       iziToast.show({
         message:
           'Sorry, there are no images matching your search query. Please try again!',
@@ -98,7 +104,7 @@ async function handleFormSubmit(event) {
     } else {
       renderGallery(arrData); // отрисовываем результаты
       if (arrData.length > 14) {
-        hideBtn();
+        showBtn();
       }
     }
     hideLoader(); // скрываем лоадер
