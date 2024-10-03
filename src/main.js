@@ -49,16 +49,16 @@ function clearPreviousSearch() {
   refs.input.value = ''; // очищаем поле ввода
 }
 // очистка страницы
-// function clearPage() {
-//   if (refs.userContainerUL) {
-//     refs.userContainerUL.innerHTML = '';
-//   }
-// }
+function clearPage() {
+  if (refs.userContainerUL) {
+    refs.userContainerUL.innerHTML = '';
+  }
+}
 
 // обработка отправки формы
 async function handleFormSubmit(event) {
   event.preventDefault(); // предотвращаем перезагрузку страницы
-
+  clearPage();
   search = refs.input.value; // получаем значение из поля поиска
 
   console.log(search);
