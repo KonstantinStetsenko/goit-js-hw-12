@@ -1,16 +1,15 @@
 import axios from 'axios';
 import { search } from '../main';
-import { _page, _per_page } from '../main';
+import { _page } from '../main';
 import { refs } from '../main';
-
-const API_KEY = '35615577-2bf6ed1d70f9a1c328f0e4a49';
-const BASE_URL = 'https://pixabay.com/api/';
-
 export let searchTerm = search;
 export let arrData = [];
 export let totalImage = 1;
-export let totalPages = null;
-totalPages = totalImage / _per_page;
+export let totalPages = 0;
+export let _per_page = 15;
+const API_KEY = '35615577-2bf6ed1d70f9a1c328f0e4a49';
+const BASE_URL = 'https://pixabay.com/api/';
+
 export async function fetchGallery(search) {
   arrData = []; // Очистка перед новым запросом
   try {
@@ -29,6 +28,7 @@ export async function fetchGallery(search) {
 
     arrData = response.data.hits;
     totalImage = response.data.totalHits;
+    totalPages = totalImage / _per_page;
     console.log(totalImage);
     console.log(arrData.length);
     console.log(response);
