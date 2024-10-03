@@ -27,6 +27,7 @@ export async function fetchGallery(search) {
 
     arrData = response.data.hits;
     console.log(arrData.length);
+    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
