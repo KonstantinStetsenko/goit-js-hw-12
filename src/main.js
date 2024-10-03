@@ -1,9 +1,9 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import { arrData, fetchGallery } from './js/pixabay-api';
+import { arrData, fetchGallery, totalImage } from './js/pixabay-api';
 import { renderGallery } from './js/render-functions';
-
-export let search = '';
+import { totalPages } from './js/pixabay-api';
+export let search = 'cat';
 export let _page = 1;
 export let _per_page = 15;
 
@@ -78,7 +78,7 @@ async function handleFormSubmit(event) {
       position: 'topRight',
     });
 
-    hideBtn();
+    // hideBtn();
     console.log('Запрос пустой');
     return;
   }
@@ -105,10 +105,12 @@ async function handleFormSubmit(event) {
       });
     } else {
       renderGallery(arrData); // отрисовываем результаты
+
       if (arrData.length > 14) {
         showBtn();
       }
     }
+
     hideLoader(); // скрываем лоадер
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
@@ -128,7 +130,44 @@ refs.btn.addEventListener('click', async () => {
 
     await fetchGallery(search, _page); // загружаем следующую страницу
     renderGallery(arrData); // отрисовываем данные
+    smoothScroll();
+    console.log(_page);
   } catch (error) {
     console.log('Ошибка при загрузке следующей страницы:', error);
   }
+
+  // Конец страниц
+  if (_page >= totalPages) {
+    hideBtn();
+    iziToast.warning({
+      message: "We're sorry, but you've reached the end of search results.",
+      backgroundColor: '#ffa500',
+      messageSize: 16,
+      messageColor: '#FFF',
+      iconColor: '',
+      titleColor: '#fa0598e5',
+      icon: 'info-outline',
+      titleSize: 16,
+      messageLineHeight: 24,
+      position: 'topRight',
+    });
+    console.log('Скрываем кнопку');
+  } else {
+    showBtn();
+    console.log('показываем кнопку');
+  }
 });
+
+function smoothScroll() {
+  const lastArticle = refs.userContainerUL.lastElementChild;
+  console.log(lastArticle);
+  const ArticleHeight = lastArticle.getBoundingClientRect().height;
+  console.log(ArticleHeight);
+  const scrolHeight = ArticleHeight * 5;
+  console.log(scrolHeight);
+  window.scrollBy({
+    top: scrolHeight,
+    left: 0,
+    behavior: 'smooth',
+  });
+}

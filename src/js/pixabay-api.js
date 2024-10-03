@@ -8,7 +8,9 @@ const BASE_URL = 'https://pixabay.com/api/';
 
 export let searchTerm = search;
 export let arrData = [];
-
+export let totalImage = 1;
+export let totalPages = null;
+totalPages = totalImage / _per_page;
 export async function fetchGallery(search) {
   arrData = []; // Очистка перед новым запросом
   try {
@@ -26,6 +28,8 @@ export async function fetchGallery(search) {
     });
 
     arrData = response.data.hits;
+    totalImage = response.data.totalHits;
+    console.log(totalImage);
     console.log(arrData.length);
     console.log(response);
   } catch (error) {
