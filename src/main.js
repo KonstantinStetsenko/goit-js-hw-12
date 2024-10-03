@@ -16,6 +16,9 @@ export const refs = {
   input: document.querySelector('.input-serch'), // поле ввода поиска
 };
 
+console.log(refs.input); // Исправляем ошибку здесь, должно быть `input`, а не `searchInput`
+console.log(refs.form); // Проверяем, что форма найдена
+
 // показать или скрыть лоадер
 function showLoader() {
   refs.loader.classList.add('loader');
@@ -38,14 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // функция для очистки предыдущего запроса
 function clearPreviousSearch() {
-  search = ''; // сбрасываем значение переменной search
+  // search = ''; // сбрасываем значение переменной search
   _page = 1; // сбрасываем номер страницы
   if (refs.userContainerUL) {
     refs.userContainerUL.innerHTML = ''; // очищаем контейнер с результатами
   }
   refs.input.value = ''; // очищаем поле ввода
 }
-// // очистка страницы
+// очистка страницы
 // function clearPage() {
 //   if (refs.userContainerUL) {
 //     refs.userContainerUL.innerHTML = '';
@@ -55,8 +58,7 @@ function clearPreviousSearch() {
 // обработка отправки формы
 async function handleFormSubmit(event) {
   event.preventDefault(); // предотвращаем перезагрузку страницы
-  clearPreviousSearch();
-  console.log(refs.userContainerUL);
+
   search = refs.input.value; // получаем значение из поля поиска
 
   console.log(search);
