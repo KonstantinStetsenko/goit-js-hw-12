@@ -144,11 +144,9 @@ refs.btn.addEventListener('click', async () => {
 // скрол страницы
 function smoothScroll() {
   const lastArticle = refs.userContainerUL.lastElementChild;
-  console.log(lastArticle);
   const ArticleHeight = lastArticle.getBoundingClientRect().height;
-  console.log(ArticleHeight);
   const scrolHeight = ArticleHeight * 5;
-  console.log(scrolHeight);
+
   window.scrollBy({
     top: scrolHeight,
     left: 0,
