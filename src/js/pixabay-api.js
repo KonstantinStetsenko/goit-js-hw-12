@@ -29,9 +29,6 @@ export async function fetchGallery(search) {
     arrData = response.data.hits;
     totalImage = response.data.totalHits;
     totalPages = totalImage / _per_page;
-    console.log(totalImage);
-    console.log(arrData.length);
-    console.log(response);
   } catch (error) {
     console.error('Error fetching data:', error);
   }

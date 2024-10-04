@@ -15,9 +15,6 @@ export const refs = {
   input: document.querySelector('.input-serch'), // поле ввода поиска
 };
 
-console.log(refs.input); // Исправляем ошибку здесь, должно быть `input`, а не `searchInput`
-console.log(refs.form); // Проверяем, что форма найдена
-
 // показать или скрыть лоадер
 function showLoader() {
   refs.loader.classList.add('loader');
@@ -38,15 +35,7 @@ function hideBtn() {
 document.addEventListener('DOMContentLoaded', () => {
   hideLoader();
 });
-// функция для очистки предыдущего запроса
-function clearPreviousSearch() {
-  // search = ''; // сбрасываем значение переменной search
-  _page = 1; // сбрасываем номер страницы
-  if (refs.userContainerUL) {
-    refs.userContainerUL.innerHTML = ''; // очищаем контейнер с результатами
-  }
-  refs.input.value = ''; // очищаем поле ввода
-}
+
 // очистка страницы
 function clearPage() {
   if (refs.userContainerUL) {
@@ -60,9 +49,8 @@ async function handleFormSubmit(event) {
   clearPage();
   search = refs.input.value; // получаем значение из поля поиска
 
-  console.log(search);
-
   if (!search) {
+    hideBtn();
     hideLoader();
     iziToast.warning({
       message: 'Запрос пустой',
@@ -167,5 +155,3 @@ function smoothScroll() {
     behavior: 'smooth',
   });
 }
-
-// Конец страниц

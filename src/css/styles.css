@@ -41,6 +41,7 @@ ul {
 .users-list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-content: center;
   row-gap: 24px;
   column-gap: 24px;
@@ -148,6 +149,7 @@ img {
 }
 
 .loadButton {
+  margin-top: 50px;
   padding: 15px 40px;
   border: none;
   text-align: center;
