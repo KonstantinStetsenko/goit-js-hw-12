@@ -5,8 +5,8 @@ import { renderGallery } from './js/render-functions';
 import { totalPages } from './js/pixabay-api';
 import { _per_page } from './js/pixabay-api';
 
-export let search = 'cat';
-export let _page = 1;
+export let search = '';
+export let _page = 30;
 
 export const refs = {
   userContainerUL: document.querySelector('.users-list'),
@@ -59,7 +59,7 @@ async function handleFormSubmit(event) {
   event.preventDefault(); // предотвращаем перезагрузку страницы
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
-
+  _page = 1;
   if (!search) {
     hideBtn();
     hideLoader();
@@ -174,4 +174,5 @@ function smoothScroll() {
     left: 0,
     behavior: 'smooth',
   });
+  console.log(`Страница ${_page}`);
 }
