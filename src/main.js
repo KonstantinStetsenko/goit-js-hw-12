@@ -128,15 +128,12 @@ refs.btn.addEventListener('click', async () => {
         messageLineHeight: 24,
         position: 'topRight',
       });
-      console.log('Скрываем кнопку');
     } else {
       showBtn();
-      console.log('показываем кнопку');
     }
     await fetchGallery(search, _page); // загружаем следующую страницу
     renderGallery(arrData); // отрисовываем данные
     smoothScroll();
-    console.log(_page);
   } catch (error) {
     console.log('Ошибка при загрузке следующей страницы:', error);
   }
@@ -145,7 +142,7 @@ refs.btn.addEventListener('click', async () => {
 function smoothScroll() {
   const lastArticle = refs.userContainerUL.lastElementChild;
   const ArticleHeight = lastArticle.getBoundingClientRect().height;
-  const scrolHeight = ArticleHeight * 5;
+  const scrolHeight = ArticleHeight * 2;
 
   window.scrollBy({
     top: scrolHeight,
