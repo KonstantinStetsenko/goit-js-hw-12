@@ -4,23 +4,34 @@ import { arrData, fetchGallery, totalImage } from './js/pixabay-api';
 import { renderGallery } from './js/render-functions';
 import { totalPages } from './js/pixabay-api';
 import { _per_page } from './js/pixabay-api';
+
 export let search = 'cat';
 export let _page = 1;
+
 export const refs = {
   userContainerUL: document.querySelector('.users-list'),
   loader: document.querySelector('.loader'),
+  loaderButton: document.querySelector('.loader-button'),
   form: document.querySelector('.form-serch'), // форма поиска
   btn: document.querySelector('.loadButton'), // кнопка загрузки
   gallery: document.querySelector('.gallery'),
   input: document.querySelector('.input-serch'), // поле ввода поиска
 };
 
-// показать или скрыть лоадер
+// Показать или скрыть лоадер
 function showLoader() {
   refs.loader.classList.add('loader');
 }
 function hideLoader() {
   refs.loader.classList.remove('loader');
+}
+
+// Показать или скрыть лоадер кнопки
+function showLoaderButton() {
+  refs.loaderButton.style.display = 'flex';
+}
+function hideLoaderButton() {
+  refs.loaderButton.style.display = 'none';
 }
 
 // Показать или скрыть кнопку
@@ -31,23 +42,23 @@ function hideBtn() {
   refs.btn.classList.add('buttonHiden');
 }
 
-// скрываем лоадер при загрузке страницы
+// Скрываем лоадер при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
   hideLoader();
 });
 
-// очистка страницы
+// Очистка страницы
 function clearPage() {
   if (refs.userContainerUL) {
     refs.userContainerUL.innerHTML = '';
   }
 }
 
-// обработка отправки формы
+// Обработка отправки формы
 async function handleFormSubmit(event) {
   event.preventDefault(); // предотвращаем перезагрузку страницы
   clearPage();
-  search = refs.input.value; // получаем значение из поля поиска
+  search = refs.input.value.trim(); // убираем лишние пробелы
 
   if (!search) {
     hideBtn();
@@ -64,9 +75,6 @@ async function handleFormSubmit(event) {
       messageLineHeight: 24,
       position: 'topRight',
     });
-
-    // hideBtn();
-    console.log('Запрос пустой');
     return;
   }
 
@@ -93,7 +101,7 @@ async function handleFormSubmit(event) {
     } else {
       renderGallery(arrData); // отрисовываем результаты
 
-      if (arrData.length >= 15) {
+      if (arrData.length >= _per_page) {
         showBtn();
       }
     }
@@ -102,18 +110,25 @@ async function handleFormSubmit(event) {
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
     hideLoader();
+    iziToast.error({
+      message: 'Произошла ошибка при загрузке данных',
+      backgroundColor: '#ff0000',
+      position: 'topRight',
+    });
   }
 
   refs.input.value = ''; // очищаем поле ввода
 }
 
-// добавляем обработчик события на отправку формы
+// Добавляем обработчик события на отправку формы
 refs.form.addEventListener('submit', handleFormSubmit);
+hideLoaderButton();
 
-// обработка кнопки загрузки следующей страницы
+// Обработка кнопки загрузки следующей страницы
 refs.btn.addEventListener('click', async () => {
   try {
     _page += 1; // увеличиваем номер страницы при клике
+
     if (_page > totalPages) {
       hideBtn();
       iziToast.warning({
@@ -128,17 +143,27 @@ refs.btn.addEventListener('click', async () => {
         messageLineHeight: 24,
         position: 'topRight',
       });
-    } else {
-      showBtn();
+      return;
     }
+
+    showLoaderButton(); // показываем лоадер кнопки
     await fetchGallery(search, _page); // загружаем следующую страницу
+
     renderGallery(arrData); // отрисовываем данные
     smoothScroll();
   } catch (error) {
     console.log('Ошибка при загрузке следующей страницы:', error);
+    iziToast.error({
+      message: 'Ошибка при загрузке следующей страницы',
+      backgroundColor: '#ff0000',
+      position: 'topRight',
+    });
+  } finally {
+    hideLoaderButton(); // всегда скрываем лоадер кнопки
   }
 });
-// скрол страницы
+
+// Скрол страницы
 function smoothScroll() {
   const lastArticle = refs.userContainerUL.lastElementChild;
   const ArticleHeight = lastArticle.getBoundingClientRect().height;

@@ -24,6 +24,9 @@ main {
 .conteiner-widh {
   text-align: center;
   max-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 ul {
   margin: 0;
@@ -128,6 +131,7 @@ img {
 
 /* лоадер */
 .loader {
+  position: fixed;
   display: block;
   width: 68px;
   height: 68px;
@@ -149,6 +153,11 @@ img {
 }
 
 .loadButton {
+  height: 50px;
+  width: 200px;
+  display: flex; /* Используем Flexbox */
+  justify-content: center;
+  align-items: center;
   margin-top: 50px;
   padding: 15px 40px;
   border: none;
@@ -172,4 +181,25 @@ img {
 
 .buttonHiden {
   display: none;
+}
+
+.loader-button {
+  margin-right: 10px;
+  width: 28px;
+  height: 28px;
+  border: 5px dotted #fff;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
