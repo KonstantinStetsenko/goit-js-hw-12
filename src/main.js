@@ -58,11 +58,7 @@ async function handleFormSubmit(event) {
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
   _page = 1;
-  if (_page > totalPages) {
-    renderGallery(hits);
-    smoothScroll();
-    hideBtn();
-  }
+
   if (!search) {
     hideBtn();
     hideLoader();
