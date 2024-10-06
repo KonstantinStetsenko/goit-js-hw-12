@@ -6,7 +6,7 @@ import { totalPages } from './js/pixabay-api';
 import { _per_page } from './js/pixabay-api';
 
 export let search = '';
-export let _page = 30;
+export let _page = 1;
 
 export const refs = {
   userContainerUL: document.querySelector('.users-list'),
@@ -58,11 +58,13 @@ function clearPage() {
 async function handleFormSubmit(event) {
   if (totalPages === 1) {
     hideBtn(); // Если только одна страница, скрываем кнопку "Load More"
+    console.log('Только одня страница, скрываем кнопку');
   }
   event.preventDefault(); // предотвращаем перезагрузку страницы
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
   _page = 1;
+
   if (!search) {
     hideBtn();
     hideLoader();
