@@ -57,7 +57,7 @@ async function handleFormSubmit(event) {
   event.preventDefault(); // предотвращаем перезагрузку страницы
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
-  _page = 30;
+  _page = 1;
 
   if (!search) {
     hideBtn();
@@ -126,47 +126,6 @@ async function handleFormSubmit(event) {
 // Добавляем обработчик события на отправку формы
 refs.form.addEventListener('submit', handleFormSubmit);
 hideLoaderButton();
-
-// Обработка кнопки загрузки следующей страницы
-refs.btn.addEventListener('click', async () => {
-  try {
-    _page += 1; // увеличиваем номер страницы при клике
-
-    if (_page > totalPages) {
-      renderGallery(arrData); // Отрисовываем последнюю страницу
-      hideBtn();
-      iziToast.warning({
-        message: "We're sorry, but you've reached the end of search results.",
-        backgroundColor: '#ffa500',
-        messageSize: 16,
-        messageColor: '#FFF',
-        iconColor: '',
-        titleColor: '#fa0598e5',
-        icon: 'info-outline',
-        titleSize: 16,
-        messageLineHeight: 24,
-        position: 'topRight',
-      });
-      return;
-    }
-
-    showLoaderButton(); // показываем лоадер кнопки
-    await fetchGallery(search, _page); // загружаем следующую страницу
-
-    renderGallery(arrData); // отрисовываем данные
-    smoothScroll();
-  } catch (error) {
-    console.log('Ошибка при загрузке следующей страницы:', error);
-    iziToast.error({
-      message: 'Ошибка при загрузке следующей страницы',
-      backgroundColor: '#ff0000',
-      position: 'topRight',
-    });
-  } finally {
-    hideLoaderButton(); // всегда скрываем лоадер кнопки
-  }
-});
-
 // Скрол страницы
 function smoothScroll() {
   const lastArticle = refs.userContainerUL.lastElementChild;
@@ -180,3 +139,62 @@ function smoothScroll() {
   });
   console.log(`Страница ${_page}`);
 }
+// Обработка кнопки загрузки следующей страницы
+refs.btn.addEventListener('click', async () => {
+  try {
+    _page += 1; // увеличиваем номер страницы при клике
+
+    // Показать лоадер кнопки
+    showLoaderButton(); // показываем лоадер кнопки
+
+    const { hits, totalHits } = await fetchGallery(search, _page); // загружаем следующую страницу
+
+    // Проверка, есть ли еще страницы для загрузки
+    if (_page > totalPages) {
+      hideBtn(); // скрываем кнопку, если это последняя страница
+      iziToast.warning({
+        message: "We're sorry, but you've reached the end of search results.",
+        backgroundColor: '#ffa500',
+        messageSize: 16,
+        messageColor: '#FFF',
+        iconColor: '',
+        titleColor: '#fa0598e5',
+        icon: 'info-outline',
+        titleSize: 16,
+        messageLineHeight: 24,
+        position: 'topRight',
+      });
+      return; // Выходим, чтобы не выполнять повторную отрисовку
+    }
+
+    // Если есть данные, рендерим их
+    if (hits.length > 0) {
+      renderGallery(hits); // отрисовываем данные
+    } else {
+      hideBtn(); // скрываем кнопку, если нет изображений
+      iziToast.warning({
+        message: 'No more images to load.',
+        backgroundColor: '#ffa500',
+        messageSize: 16,
+        messageColor: '#FFF',
+        iconColor: '',
+        titleColor: '#fa0598e5',
+        icon: 'info-outline',
+        titleSize: 16,
+        messageLineHeight: 24,
+        position: 'topRight',
+      });
+    }
+
+    smoothScroll(); // прокрутка к новым изображениям
+  } catch (error) {
+    console.log('Ошибка при загрузке следующей страницы:', error);
+    iziToast.error({
+      message: 'Ошибка при загрузке следующей страницы',
+      backgroundColor: '#ff0000',
+      position: 'topRight',
+    });
+  } finally {
+    hideLoaderButton(); // всегда скрываем лоадер кнопки
+  }
+});
