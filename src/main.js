@@ -56,6 +56,9 @@ function clearPage() {
 
 // Обработка отправки формы
 async function handleFormSubmit(event) {
+  if (totalPages === 1) {
+    hideBtn(); // Если только одна страница, скрываем кнопку "Load More"
+  }
   event.preventDefault(); // предотвращаем перезагрузку страницы
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
@@ -130,7 +133,7 @@ refs.btn.addEventListener('click', async () => {
     _page += 1; // увеличиваем номер страницы при клике
 
     if (_page > totalPages) {
-      renderGallery(arrData);
+      renderGallery(arrData); // Отрисовываем последнюю страницу
       hideBtn();
       iziToast.warning({
         message: "We're sorry, but you've reached the end of search results.",
