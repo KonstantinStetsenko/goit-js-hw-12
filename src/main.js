@@ -149,7 +149,7 @@ refs.btn.addEventListener('click', async () => {
 
     // Проверка, есть ли еще страницы для загрузки
     if (_page > totalPages) {
-      renderGallery(hits);
+      renderGallery(arrData);
       smoothScroll();
       hideBtn(); // скрываем кнопку, если это последняя страница
       iziToast.warning({
@@ -169,7 +169,7 @@ refs.btn.addEventListener('click', async () => {
 
     // Если есть данные, рендерим их
     if (hits.length > 0) {
-      renderGallery(hits); // отрисовываем данные
+      renderGallery(arrData); // отрисовываем данные
     } else {
       hideBtn(); // скрываем кнопку, если нет изображений
       iziToast.warning({
