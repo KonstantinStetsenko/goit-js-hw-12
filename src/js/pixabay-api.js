@@ -31,7 +31,7 @@ export async function fetchGallery(search, page = 1) {
 
     arrData = response.data.hits;
     totalImage = response.data.totalHits;
-    totalPages = Math.ceil(totalImage / _per_page); // округляем в большую сторону
+    totalPages = totalImage / _per_page; // округляем в большую сторону
 
     return { hits: arrData, totalHits: totalImage }; // возвращаем нужные данные
   } catch (error) {

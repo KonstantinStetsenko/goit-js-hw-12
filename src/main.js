@@ -58,7 +58,11 @@ async function handleFormSubmit(event) {
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
   _page = 1;
-
+  if (_page > totalPages) {
+    renderGallery(hits);
+    smoothScroll();
+    hideBtn();
+  }
   if (!search) {
     hideBtn();
     hideLoader();
@@ -85,7 +89,6 @@ async function handleFormSubmit(event) {
     // Переносим проверку после того, как данные загружены
     if (totalPages <= 1) {
       hideBtn(); // Если только одна страница, скрываем кнопку "Load More"
-      console.log('Только одна страница, скрываем кнопку');
     } else {
       showBtn(); // Показать кнопку, если больше одной страницы
     }
@@ -137,7 +140,6 @@ function smoothScroll() {
     left: 0,
     behavior: 'smooth',
   });
-  console.log(`Страница ${_page}`);
 }
 // Обработка кнопки загрузки следующей страницы
 refs.btn.addEventListener('click', async () => {
@@ -151,6 +153,8 @@ refs.btn.addEventListener('click', async () => {
 
     // Проверка, есть ли еще страницы для загрузки
     if (_page > totalPages) {
+      renderGallery(hits);
+      smoothScroll();
       hideBtn(); // скрываем кнопку, если это последняя страница
       iziToast.warning({
         message: "We're sorry, but you've reached the end of search results.",
