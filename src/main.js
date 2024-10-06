@@ -4,10 +4,8 @@ import { arrData, fetchGallery, totalImage } from './js/pixabay-api';
 import { renderGallery } from './js/render-functions';
 import { totalPages } from './js/pixabay-api';
 import { _per_page } from './js/pixabay-api';
-
 export let search = '';
 export let _page = 1;
-
 export const refs = {
   userContainerUL: document.querySelector('.users-list'),
   loader: document.querySelector('.loader'),
@@ -56,14 +54,10 @@ function clearPage() {
 
 // Обработка отправки формы
 async function handleFormSubmit(event) {
-  if (totalPages === 1) {
-    hideBtn(); // Если только одна страница, скрываем кнопку "Load More"
-    console.log('Только одня страница, скрываем кнопку');
-  }
   event.preventDefault(); // предотвращаем перезагрузку страницы
   clearPage();
   search = refs.input.value.trim(); // убираем лишние пробелы
-  _page = 1;
+  _page = 30;
 
   if (!search) {
     hideBtn();
@@ -88,6 +82,14 @@ async function handleFormSubmit(event) {
   try {
     await fetchGallery(search); // выполняем запрос по ключевому слову
 
+    // Переносим проверку после того, как данные загружены
+    if (totalPages <= 1) {
+      hideBtn(); // Если только одна страница, скрываем кнопку "Load More"
+      console.log('Только одна страница, скрываем кнопку');
+    } else {
+      showBtn(); // Показать кнопку, если больше одной страницы
+    }
+
     if (arrData.length === 0) {
       hideBtn();
       iziToast.show({
@@ -105,10 +107,6 @@ async function handleFormSubmit(event) {
       });
     } else {
       renderGallery(arrData); // отрисовываем результаты
-
-      if (arrData.length >= _per_page) {
-        showBtn();
-      }
     }
 
     hideLoader(); // скрываем лоадер
