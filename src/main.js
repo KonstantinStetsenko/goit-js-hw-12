@@ -130,6 +130,7 @@ refs.btn.addEventListener('click', async () => {
     _page += 1; // увеличиваем номер страницы при клике
 
     if (_page > totalPages) {
+      renderGallery(arrData);
       hideBtn();
       iziToast.warning({
         message: "We're sorry, but you've reached the end of search results.",
